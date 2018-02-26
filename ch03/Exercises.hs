@@ -46,3 +46,6 @@ direction p1 p2 p3 | det < 0 = DLeft
   where det1 = ((px p1) - (px p2))*((py p3) - (py p2))
         det2 = ((px p3) - (px p2))*((py p1) - (py p2))
         det  = det1 - det2
+
+dirList (p1:p2:p3:ps) = ((direction p1 p2 p3):(dirList (p2:p3:ps)))
+dirList _ = []
