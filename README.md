@@ -1,0 +1,2 @@
+# haskell-tut
+Learning Haskell
