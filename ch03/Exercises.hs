@@ -49,3 +49,32 @@ direction p1 p2 p3 | det < 0 = DLeft
 
 dirList (p1:p2:p3:ps) = ((direction p1 p2 p3):(dirList (p2:p3:ps)))
 dirList _ = []
+
+--minY (p1:ps) =
+
+
+minYa a (p1:ps) | (py p1) < (py a) = minYa p1 ps
+minYa a (p1:ps) | (py a) == (py p1) && (px p1) < (px a) = minYa p1 ps
+minYa a (p1:ps) = minYa a ps
+minYa a [] = a
+
+vector a b = Point (pbx -pax) (pby - pay)
+                 where pax = (px a)
+                       pay = (py a)
+                       pbx = (px b)
+                       pby = (py b)
+
+scalarMult a b = pax*pbx + pay*pby
+                 where pax = (px a)
+                       pay = (py a)
+                       pbx = (px b)
+                       pby = (py b)
+
+distance a b = (sqrt ((pax - pbx)*(pax - pbx) +
+                     (pay - pby)*(pay - pby)))
+                 where pax = (px a)
+                       pay = (py a)
+                       pbx = (px b)
+                       pby = (py b)
+cosinus a b c = (scalarMult (vector a b) (vector b c))/
+                ((distance a b) * (distance b c))
