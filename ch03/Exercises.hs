@@ -58,20 +58,20 @@ minYa a (p1:ps) | (py a) == (py p1) && (px p1) < (px a) = minYa p1 ps
 minYa a (p1:ps) = minYa a ps
 minYa a [] = a
 
-vector a b = Point (pbx -pax) (pby - pay)
+vector a b = Point (pbx - pax) (pby - pay)
                  where pax = (px a)
                        pay = (py a)
                        pbx = (px b)
                        pby = (py b)
 
-scalarMult a b = pax*pbx + pay*pby
+scalarMult a b = pax * pbx + pay * pby
                  where pax = (px a)
                        pay = (py a)
                        pbx = (px b)
                        pby = (py b)
 
-distance a b = (sqrt ((pax - pbx)*(pax - pbx) +
-                     (pay - pby)*(pay - pby)))
+distance a b = (sqrt ((pax - pbx) * (pax - pbx) +
+                     (pay - pby) * (pay - pby)))
                  where pax = (px a)
                        pay = (py a)
                        pbx = (px b)
