@@ -32,7 +32,7 @@ join a (b:bs) = b ++ (a : (join a bs))
 data Direction a = DLeft
                  | DRight
                  | DStraight
-                 deriving (Show)
+                 deriving (Show, Eq)
 
 data Point a = Point a a
   deriving (Show)
@@ -78,3 +78,47 @@ distance a b = (sqrt ((pax - pbx) * (pax - pbx) +
                        pby = (py b)
 cosinus a b c = (scalarMult (vector a b) (vector b c))/
                 ((distance a b) * (distance b c))
+
+compPointsByY p1 p2 = compare (py p1) (py p2)
+sortPointsByY (p:ps) = sortBy compPointsByY (p:ps)
+
+-- 1. sort list by Y coord asc
+-- 2. swap 1st and 2nd elems of sorted list
+-- 3. add 1st point to the end of sorted list
+-- 4. first two points are assumed to be the boundary (only second is, the first will be optionally added from point 3)
+-- 5. compare last point that is in boundary with first two candidates if no more points to compare are left go to 9.
+-- 6.   if the turn is right, the first candidate is inside boundary and should be discarded
+--        (if these points create straight line it can be added to boundary)
+-- 7. compare second point with  last two boundary points and if it turns left add it to boundary, go to 5.
+-- 8.   in other case remove last boundary point from boundary-points set and go to 7.
+-- 9. return boundary points excluding the first one
+
+grahamScan (up1:up2:ups) = (init (grahamScanAlg accu rest))
+  where (sp:sps) = sortPointsByY (up1:up2:ups)
+        accu = (sp:(head sps):[])
+        rest = (reverse ((head sps):(reverse (tail sps))))
+grahamScan p = p
+
+
+grahamScanAlg acc [] = acc
+
+grahamScanAlg acc (p:[]) = grahamScanAlg2 acc (p:[])
+
+grahamScanAlg acc (p1:ps) | dir == DLeft = grahamScanAlg (p1:acc) ps
+  where dir = direction (head acc) p1 (head ps)
+
+grahamScanAlg acc (p:ps) = grahamScanAlg2 acc ps
+
+
+grahamScanAlg2 acc [] = acc
+
+grahamScanAlg2 acc ps | dir == DLeft = grahamScanAlg ((head ps):acc) (tail ps)
+  where ac1 = head acc
+        ac2 = (head (tail acc))
+        dir = direction ac2 ac1 (head ps)
+
+grahamScanAlg2 acc ps | dir == DRight || dir == DStraight = grahamScanAlg2 (tail acc) ps
+  where ac1 = head acc
+        ac2 = (head (tail acc))
+        dir = direction ac2 ac1 (head ps)
+
