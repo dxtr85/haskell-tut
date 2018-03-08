@@ -16,24 +16,27 @@ transposeLines :: [String] -> [String] -> [String]
 transposeLines acc [] = acc
 transposeLines acc (pre : suf) = transposeLines (transposeLine acc pre) suf
 
-transposeLine acc "" = reverse acc
+transposeLine acc "" = acc
 transposeLine (ac:acc) (s:str) = ((s:ac):(transposeLine acc str))
 
 transposeString :: String -> String
 transposeString [] = []
-transposeString input = unlines (transposeLines acc normalizedLines)
+transposeString input = unlines (map reverse (transposeLines acc normalizedLines))
     where inputLines = lines input
           maxLength = maximum (map length inputLines)
           acc = initializeEmptyStringList maxLength
           normalizedLines = unifyLines maxLength inputLines
 
 unifyLines :: Int -> [String] -> [String]
-unifyLines upToLength [str] = (str ++ (getEmptyString (upToLength - (length str))):[])
-unifyLines upToLength [str:strs] = ((unifyLines upToLength str) : (unifyLines upToLength strs))
+unifyLines upToLength [] = []
+unifyLines upToLength (str:strs) = (unifyLine upToLength str) : (unifyLines upToLength strs)
+
+unifyLine :: Int -> String -> String
+unifyLine upToLength str = str ++ (getEmptyString (upToLength - (length str)))
 
 getEmptyString n | n == 0 = []
-getEmptyString n = ' ' : getEmptyString n-1
+getEmptyString n = ' ' : getEmptyString (n-1)
 
 initializeEmptyStringList :: Int -> [String]
-initializeEmptyStringList 0 = ""
-initializeEmptyStringList num = "":initializeEmptyStringList num-1
+initializeEmptyStringList 0 = []
+initializeEmptyStringList num = "":initializeEmptyStringList (num-1)
