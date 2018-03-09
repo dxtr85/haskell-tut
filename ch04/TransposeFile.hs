@@ -1,4 +1,4 @@
---file: ch04/FirstWord.hs
+--file: ch04/TransposeFile.hs
 import System.Environment (getArgs)
 interactWith function inputFile outputFile = do
   input <- readFile inputFile
