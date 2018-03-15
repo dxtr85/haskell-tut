@@ -54,3 +54,6 @@ takeWhile_my2 cond s = foldr step [] s
                    | otherwise = []
 
 groupByMy :: (a -> a -> Bool) -> [a] -> [[a]]
+groupByMy cond s = foldr step [[]] s
+  where step s accu@(a:acc) | not (null a) && not (s `cond` (head a)) = [s]:accu
+                       | otherwise = (s:a):acc
