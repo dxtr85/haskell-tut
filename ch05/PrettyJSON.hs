@@ -5,7 +5,7 @@ import Data.Char (ord)
 import Data.Bits (shiftR, (.&.))
 
 import SimpleJSON (JValue(..))
-import Prettify (Doc, (<>), char, double, fsep, hcat, punctuate, text, compact, pretty)
+import Prettify (Doc, (<>), char, double, fsep, hcat, punctuate, text, compact, pretty, empty, (</>))
 
 
 renderJValue :: JValue -> Doc
@@ -17,9 +17,7 @@ renderJValue (JNumber n) = double n
 renderJValue (JString s) = string s
 renderJValue (JArray ary) = series '[' ']' renderJValue ary
 renderJValue (JObject obj) = series '{' '}' field obj
-  where field (name,val) = string name
-        <> text ": "
-        <> renderJValue val
+  where field (name,val) = string name <> text ": " <> renderJValue val
 
 
 string :: String -> Doc
@@ -45,7 +43,7 @@ simpleEscapes = zipWith ch "\b\n\f\r\t\\\"/" "bnfrt\\\"/"
 
 smallHex :: Int -> Doc
 smallHex x = text "\\u" <> text (replicate (4 - length h) '0')
-             <> hext h where h = showHex x ""
+             <> text h where h = showHex x ""
 
 
 astral :: Int -> Doc
@@ -60,7 +58,7 @@ hexEscape c | d < 0x10000 = smallHex d
             where d = ord c
 
 
-series :: Char -> Char -> (s -> Doc) -> [a] -> Doc
+series :: Char -> Char -> (a -> Doc) -> [a] -> Doc
 series open close item = enclose open close . fsep . punctuate (char ',') . map item
 
 
