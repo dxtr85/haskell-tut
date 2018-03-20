@@ -1,0 +1,19 @@
+-- file: ch04/Partial.hs
+import Data.Char
+import Data.List
+
+isInAny needle haystack = any inSequence haystack
+  where inSequence s = needle `isInfixOf` s
+
+isInAny2 needle haystack = any (\s -> needle `isInfixOf` s) haystack
+
+isInAny3 needle haystack = any (isInfixOf needle) haystack
+
+isInAny4 needle haystack = any (needle `isInfixOf`) haystack
+
+dropWhileSpace = dropWhile isSpace
+zip3foo = zip3 "foo"
+zip3foobar = zip3 "foo" "bar"
+
+
+smallLetter = (`elem` ['a'..'z'])
